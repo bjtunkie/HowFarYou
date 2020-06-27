@@ -1,0 +1,57 @@
+plugins {
+    id 'application'
+    id 'idea'
+    id 'maven-publish'
+}
+
+group = 'org.chat.server'
+version = '0.1'
+mainClassName = 'org.chat.server.CoreApplication'
+sourceCompatibility = '11'
+targetCompatibility = '11'
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+    maven {
+        def repoUrl = "${buildDir}/repos"
+        url = version.endsWith('SNAPSHOT') ? "${repoUrl}/snapshots" : "${repoUrl}/releases"
+    }
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = "${group}"
+            artifactId = "server"
+            version = "${version}"
+
+            from components.java
+        }
+    }
+}
+
+
+jar {
+    manifest {
+        attributes "Main-Class": "$mainClassName"
+    }
+
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+dependencies {
+    implementation 'com.google.code.gson:gson:latest.release'
+    implementation 'org.hello.lib:hello:latest.release'
+
+    implementation 'org.slf4j:slf4j-api:1.7.30'
+    implementation 'org.slf4j:slf4j-log4j12:latest.release'
+
+}
+
+/*
+        ./gradlew clean PublishToMavenLocal
+*/
+

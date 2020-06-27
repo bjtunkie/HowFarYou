@@ -1,0 +1,6 @@
+rootProject.name = 'Project-1989'
+include ':core'
+include ':android'
+include ':desktop'
+include ':PlayGround'
+

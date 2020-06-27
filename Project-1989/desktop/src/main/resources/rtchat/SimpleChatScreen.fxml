@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.VBox?>
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.chat.desktop.rtchat.SimpleChatScreen"
+            prefHeight="400.0" prefWidth="600.0">
+
+    <center>
+        <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" maxHeight="1.7976931348623157E308"
+                    maxWidth="1.7976931348623157E308" pannable="true" prefHeight="496.0" vbarPolicy="ALWAYS"
+                    vmin="1.0" vvalue="1.0" VBox.vgrow="ALWAYS">
+            <content>
+                <ListView fx:id="chatPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+                          prefHeight="200.0" prefWidth="200.0"/>
+            </content>
+        </ScrollPane>
+
+    </center>
+    <bottom>
+
+        <HBox spacing="10">
+            <TextField fx:id="tf"></TextField>
+            <Button fx:id="sendBtn" alignment="CENTER_RIGHT" contentDisplay="CENTER" mnemonicParsing="false"
+                    text="Send" onAction="#sendBtnAction"/>
+
+
+        </HBox>
+
+
+    </bottom>
+</BorderPane>

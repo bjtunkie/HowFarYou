@@ -1,0 +1,111 @@
+package com.chat.test;
+
+import com.chat.proto.BaseMessage;
+import com.chat.proto.RequestPool;
+import com.chat.App;
+
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.util.*;
+import java.util.function.Consumer;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+
+public class DetectJar {
+    public static void main(String... args) {
+        getAllClasses(App.class);
+    }
+    private static Map<Short, Class<? extends AbstractBaseMessage>> getAbstractBaseMessageClasses(Class<?> rootClass) {
+        String srcPath = rootClass.getProtectionDomain().getCodeSource().getLocation().getPath();
+        Map<Short, Class<? extends AbstractBaseMessage>> map = new HashMap<>();
+        final List<String> listOfClassNames = new ArrayList<>();
+        try {
+            if (srcPath.toLowerCase().endsWith(".jar")) {
+                String pathOfPackage = rootClass.getPackage().getName().replaceAll("[.]", "/");
+
+                JarFile jarFile = new JarFile(srcPath);
+                Iterator<JarEntry> it = jarFile.entries().asIterator();
+                it.forEachRemaining(entry -> {
+
+                    String name = entry.getName();
+                    if (name.endsWith(".class") && name.startsWith(pathOfPackage)) {
+                        String nameWithPackage = name.replaceAll("/", ".").replace(".class", "");
+                        listOfClassNames.add(nameWithPackage);
+
+                    }
+
+                });
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        listOfClassNames.forEach(e -> {
+
+            try {
+                Class<?> k = rootClass.forName(e);
+                if (AbstractBaseMessage.class.isAssignableFrom(k)) {
+
+                    try {
+                        Field fieldForCode = k.getDeclaredField("CODE");
+                        fieldForCode.setAccessible(true);
+                        Short value = fieldForCode.getShort(null);
+                        map.put(value, (Class<? extends AbstractBaseMessage>) k);
+                    } catch (NoSuchFieldException | IllegalAccessException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            } catch (ClassNotFoundException classNotFoundException) {
+                classNotFoundException.printStackTrace();
+            }
+        });
+        return map;
+    }
+
+    public static void getAllClasses(Class<?> rootClass) {
+//        URL location = rootClass.getResource('/' + rootClass.getName().replace('.', '/') + ".class");
+        String srcPath = rootClass.getProtectionDomain().getCodeSource().getLocation().getPath();
+        final List<String> listOfPath = new ArrayList<>();
+        final List<String> listOfClassNames = new ArrayList<>();
+        try {
+            if (srcPath.toLowerCase().endsWith(".jar")) {
+                String prefix = srcPath + "!";
+                String pathOfPackage = rootClass.getPackage().getName().replaceAll("[.]", "/");
+
+                JarFile jarFile = new JarFile(srcPath);
+                jarFile.stream().filter(entry ->
+
+                        entry.getName().startsWith(pathOfPackage) && entry.getName().endsWith(".class")
+
+                ).forEach(x -> {
+                    String a = x.getName();
+                    listOfPath.add(prefix + a);
+
+                    String m = a.replaceAll("/", ".").replace(".class", "");
+                    listOfClassNames.add(m);
+                });
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Consumer<String> consumer = e -> {
+            System.out.println(e);
+        };
+        listOfPath.forEach(consumer);
+        listOfClassNames.forEach(e -> {
+
+            try {
+                Class<?> k = rootClass.forName(e);
+                if (RequestPool.class.isAssignableFrom(k)) {
+                    System.out.println(k.getCanonicalName() + "YAAAAAAAAAAAAAAAAAAAAAAAAAAAY");
+                } else {
+                    System.out.println(k.getCanonicalName());
+                }
+            } catch (ClassNotFoundException classNotFoundException) {
+                classNotFoundException.printStackTrace();
+            }
+        });
+    }
+}
+

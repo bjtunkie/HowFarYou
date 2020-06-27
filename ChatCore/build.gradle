@@ -1,0 +1,43 @@
+plugins {
+    id 'java-library'
+    id 'idea'
+    id 'maven-publish'
+}
+
+group = 'com.chat'
+version = '0.1'
+sourceCompatibility = '11'
+targetCompatibility = '11'
+
+repositories {
+    mavenCentral()
+    maven {
+        def repoUrl = "${buildDir}/repos"
+        url = version.endsWith('SNAPSHOT') ? "${repoUrl}/snapshots" : "${repoUrl}/releases"
+    }
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = "${group}"
+            artifactId = "core"
+            version = "${version}"
+
+            from components.java
+        }
+    }
+}
+
+
+dependencies {
+    implementation 'com.google.code.gson:gson:2.8.2'
+}
+
+/*
+        
+./gradlew clean PublishToMavenLocal
+
+
+*/
+

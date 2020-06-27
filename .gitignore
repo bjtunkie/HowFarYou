@@ -3,6 +3,9 @@
 *.aar
 *.ap_
 *.aab
+*.ipr
+*.iml
+*.iws
 
 # Files for the ART/Dalvik VM
 *.dex

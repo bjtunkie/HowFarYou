@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="cambridgeBlueNormal">#a3c1ad</color>
+    <color name="cambridgeBlueThick">#A3B8C1</color>
+
+    <color name="black_overlay">#66000000</color>
+    <color name="login_bg">#E2E7E1E1</color>
+
+
+</resources>
